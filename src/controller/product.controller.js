@@ -6,16 +6,16 @@ export const getAll = async (req, res, next) => {
             page,
             limit,
             title,
-            category,
             sort
         } = req.query;
-        const response = await service.getAll(page, limit, title, category, sort);
+        const response = await service.getAll(page, limit, title, sort);
         const nextLink = response.nextPage ? `http://localhost:8080/products?page=${response.nextPage}` : null;
         const prevLink = response.prevPage ? `http://localhost:8080/products?page=${response.prevPage}` : null;
         res.status(200).json({
             status: 'success',
             payload: response.docs,
-            totalPages: response.totalDocs,
+            totalPages: response.totalPages,
+            totalProducts: response.totalDocs,
             prevPage: response.prevPage,
             nextPage: response.nextPage,
             page,
@@ -23,8 +23,7 @@ export const getAll = async (req, res, next) => {
             hasPrevPage: response.hasPrevPage,
             prevLink,
             nextLink
-        });
-        res.json(response);
+        });        
     } catch (error) {
         next(error);
     }
